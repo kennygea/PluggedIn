@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">PluggedIn</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="Previous">Previous</string>
+    <string name="Next">Next</string>
+</resources>
