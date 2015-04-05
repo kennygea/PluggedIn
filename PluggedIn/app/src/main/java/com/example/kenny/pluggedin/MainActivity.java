@@ -1,45 +1,30 @@
 package com.example.kenny.pluggedin;
 
-import android.app.Activity;
+import android.content.Intent;
+import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ViewFlipper;
 
 
-public class StepOne extends Activity implements View.OnClickListener {
-
-    private ViewFlipper vf;
-    private Button Next;
-    private Button Previous;
+public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_step_one);
-
-        vf = (ViewFlipper) findViewById(R.id.viewFlipper);
-        Previous = (Button) findViewById(R.id.button);
-        Next = (Button) findViewById(R.id.button2);
-        Next.setOnClickListener(this);
-        Previous.setOnClickListener(this);
+        setContentView(R.layout.activity_main);
     }
-    @Override
-    public void onClick(View v) {
-        if (v == Next) {
-            vf.showNext();
-        }
-        if (v == Previous) {
-            vf.showPrevious();
-        }
+
+    public void selectPlaylist(View view) {
+        Intent intent = new Intent(this, PlaylistActivity.class);
+        startActivity(intent);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_step_one, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -57,6 +42,4 @@ public class StepOne extends Activity implements View.OnClickListener {
 
         return super.onOptionsItemSelected(item);
     }
-
 }
-

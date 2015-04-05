@@ -3,6 +3,6 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="Previous">Previous</string>
-    <string name="Next">Next</string>
+    <string name="Title">Welcome To PluggedIn</string>
+    <string name="title_activity_playlist">Playlist</string>
 </resources>

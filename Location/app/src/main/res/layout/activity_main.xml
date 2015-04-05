@@ -12,12 +12,42 @@
         android:id="@+id/scrollView"
         android:layout_centerHorizontal="true">
 
-        <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/text"
-            android:layout_below="@+id/Both"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
     </ScrollView>
+
+    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text"
+        android:layout_marginTop="38dp"
+        android:layout_below="@+id/button"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wifi"
+        android:id="@+id/button"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GPS"
+        android:id="@+id/button2"
+        android:layout_alignTop="@+id/scrollView"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="BOTH"
+        android:id="@+id/button3"
+        android:layout_above="@+id/text"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

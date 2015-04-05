@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -20,47 +21,119 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 
-public class MainActivity extends ActionBarActivity{
+public class MainActivity extends ActionBarActivity implements View.OnClickListener{
 
-
+    private LocationManager locationManager;
+    private Button Wifi;
+    private Button GPS;
+    private Button Both;
+    private LocationListener locationListener;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         TextView v = (TextView)this.findViewById(R.id.text);
-        v.setText("Starting...");
-        RadioGroup grouping = (RadioGroup) this.findViewById(R.id.radioGroup);
-        int idx = grouping.getCheckedRadioButtonId();
-        LocationListener locationListener = new LocationListener(){
-            public void onLocationChanged(Location location){
-                    // Called when a new location is found by the network location provider.
-                    makeUseOfNewLocation(location);
-                    }
+        Wifi = (Button) findViewById(R.id.button);
+        GPS = (Button) findViewById(R.id.button2);
+        Both = (Button) findViewById(R.id.button3);
+        Wifi.setOnClickListener(this);
+        GPS.setOnClickListener(this);
+        Both.setOnClickListener(this);
 
-            public void onStatusChanged(String provider,int status,Bundle extras){
-                    }
-
-            public void onProviderEnabled(String provider){
-                    }
-
-            public void onProviderDisabled(String provider){
-                    }
-        };
-
-        try {
-            // Acquire a reference to the system Location Manager
-            LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-            // Register the listener with the Location Manager to receive location updates
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60 * 1000, 400, locationListener);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 60 * 1000, 400, locationListener);
-
-        } catch (SecurityException e) {
-            // requires ACCESS_FINE_LOCATION permission
-            v.setText(e.getMessage());
-        }
     }
 
+    @Override
+    public void onClick(View v) {
+        TextView a = (TextView)this.findViewById(R.id.text);
+        if (v == Wifi) {
+            a.setText("Starting Wifi or None...");
+            locationListener = new LocationListener(){
+                public void onLocationChanged(Location location){
+                    // Called when a new location is found by the network location provider.
+                    makeUseOfNewLocation(location);
+                }
+
+                public void onStatusChanged(String provider,int status,Bundle extras){
+                }
+
+                public void onProviderEnabled(String provider){
+                }
+
+                public void onProviderDisabled(String provider){
+                }
+            };
+
+            try {
+                // Acquire a reference to the system Location Manager
+                // Register the listener with the Location Manager to receive location updates
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 20*1000, 0, locationListener);
+
+            } catch (SecurityException e) {
+                // requires ACCESS_FINE_LOCATION permission
+                a.setText(e.getMessage());
+            }
+        }
+        if (v == GPS) {
+            a.setText("Starting GPS Only...");
+            locationListener = new LocationListener(){
+                public void onLocationChanged(Location location){
+                    // Called when a new location is found by the network location provider.
+                    makeUseOfNewLocation(location);
+                }
+
+                public void onStatusChanged(String provider,int status,Bundle extras){
+                }
+
+                public void onProviderEnabled(String provider){
+                }
+
+                public void onProviderDisabled(String provider){
+                }
+            };
+
+            try {
+                // Acquire a reference to the system Location Manager
+                // Register the listener with the Location Manager to receive location updates
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20*1000, 0, locationListener);
+
+            } catch (SecurityException e) {
+                // requires ACCESS_FINE_LOCATION permission
+                a.setText(e.getMessage());
+            }
+        }
+        if (v == Both) {
+            a.setText("Starting Both...");
+            locationListener = new LocationListener(){
+                public void onLocationChanged(Location location){
+                    // Called when a new location is found by the network location provider.
+                    makeUseOfNewLocation(location);
+                }
+
+                public void onStatusChanged(String provider,int status,Bundle extras){
+                }
+
+                public void onProviderEnabled(String provider){
+                }
+
+                public void onProviderDisabled(String provider){
+                }
+            };
+
+            try {
+                // Acquire a reference to the system Location Manager
+                // Register the listener with the Location Manager to receive location updates
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20 *1000, 0, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 20*1000, 0, locationListener);
+
+            } catch (SecurityException e) {
+                // requires ACCESS_FINE_LOCATION permission
+                a.setText(e.getMessage());
+            }
+
+        }
+    }
 
     private void makeUseOfNewLocation(Location loc) {
         TextView v = (TextView)this.findViewById(R.id.text);
