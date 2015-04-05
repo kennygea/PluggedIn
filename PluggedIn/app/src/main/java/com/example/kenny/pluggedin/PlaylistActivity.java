@@ -20,6 +20,7 @@ public class PlaylistActivity extends ActionBarActivity {
 
     private ArrayList<Playlist> playlistList;
     private ListView playlistView;
+    private long playlistSelectedID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,5 +84,8 @@ public class PlaylistActivity extends ActionBarActivity {
     }
 
     public void songPicked(View v) {
+       int playlistSelectedPosition = Integer.parseInt(v.getTag().toString());
+       Playlist selected = playlistList.get(playlistSelectedPosition);
+       playlistSelectedID = selected.getId();
     }
 }
