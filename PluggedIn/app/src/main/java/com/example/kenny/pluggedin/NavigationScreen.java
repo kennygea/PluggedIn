@@ -1,6 +1,8 @@
 package com.example.kenny.pluggedin;
 
 import android.location.Location;
+import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -24,12 +26,18 @@ public class NavigationScreen extends FragmentActivity
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private GoogleApiClient ApiClient;
     private Location mLastLocation;
+    private long playlistID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigaton_screen);
         //setUpMapIfNeeded();
+       Intent intent = getIntent();
+       Bundle bundle = intent.getExtras();
+       if (bundle != null) {
+           playlistID = bundle.getLong(PlaylistActivity.EXTRA_ID);
+       }
 
         MapFragment navigationFrag = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.DisplayMap);
