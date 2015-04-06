@@ -6,4 +6,7 @@
     <string name="Title">Welcome To PluggedIn</string>
     <string name="title_activity_playlist">Playlist</string>
     <string name="title_activity_navigaton_screen">Navigation</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
