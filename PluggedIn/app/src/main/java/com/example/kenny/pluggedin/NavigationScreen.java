@@ -1,8 +1,14 @@
 package com.example.kenny.pluggedin;
 
-import android.support.v4.app.FragmentActivity;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -10,10 +16,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.sql.Connection;
+
 public class NavigationScreen extends FragmentActivity
-        implements OnMapReadyCallback {
+        implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private GoogleApiClient ApiClient;
+    private Location mLastLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +34,7 @@ public class NavigationScreen extends FragmentActivity
         MapFragment navigationFrag = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.DisplayMap);
         navigationFrag.getMapAsync(this);
+
     }
 
     @Override
@@ -72,9 +83,57 @@ public class NavigationScreen extends FragmentActivity
 
     @Override
     public void onMapReady(GoogleMap map){
-        System.out.print("hi");
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(42.355388, -71.099714))
-                .title("MIT"));
+       mMap = map;
+       mMap.setMyLocationEnabled(true);
+        //Get Location
+        buildGoogleApiClient();
+        //mMap.addMarker(new MarkerOptions()
+        //        .position(new LatLng(mitLat, mitLong))
+        //        .title("MIT"));
+        Double mitLat;
+        Double mitLong;
+        Float zoomLens;
+        LatLng mit;
+        try{
+            mitLat = mLastLocation.getLatitude();
+            mitLong = mLastLocation.getLongitude();
+            zoomLens = 8.0f;
+            mit = new LatLng(mitLat, mitLong);
+        } catch(NullPointerException npe){
+            mitLat = 30.0;
+            mitLong = 30.0;
+            zoomLens = 10.0f;
+            mit = new LatLng(mitLat, mitLong);
+        }
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mit, zoomLens));
+
+    }
+    protected synchronized void buildGoogleApiClient() {
+        this.ApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                this.ApiClient);
+
+        if(mMap != null){
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), 13.0f));
+        }
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int cause) {
+        System.out.println("Sorry brah");
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        System.out.println(result.toString());
     }
 }
