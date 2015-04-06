@@ -44,7 +44,7 @@ public class NavigatonScreen extends FragmentActivity {
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.DisplayMap))
                     .getMap();
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
