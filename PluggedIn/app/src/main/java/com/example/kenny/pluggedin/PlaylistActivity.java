@@ -1,19 +1,21 @@
 package com.example.kenny.pluggedin;
 
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ListView;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import android.net.Uri;
-import android.content.ContentResolver;
-import android.database.Cursor;
-import android.view.View;
-import android.widget.ListView;
 
 
 public class PlaylistActivity extends ActionBarActivity {
@@ -21,6 +23,7 @@ public class PlaylistActivity extends ActionBarActivity {
     private ArrayList<Playlist> playlistList;
     private ListView playlistView;
     private long playlistSelectedID;
+    public final static String EXTRA_ID = "com.example.kenny.pluggedin.Playlist ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,14 @@ public class PlaylistActivity extends ActionBarActivity {
         });
         PlaylistAdapter playlistAdt = new PlaylistAdapter(this, playlistList);
         playlistView.setAdapter(playlistAdt);
+        Button button = (Button)findViewById(R.id.maptest);
+        button.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(PlaylistActivity.this, NavigationScreen.class);
+                PlaylistActivity.this.startActivity(intent);
+            }
+        });
+
     }
 
 
@@ -83,9 +94,13 @@ public class PlaylistActivity extends ActionBarActivity {
         musicCursor.close();
     }
 
+
     public void songPicked(View v) {
        int playlistSelectedPosition = Integer.parseInt(v.getTag().toString());
        Playlist selected = playlistList.get(playlistSelectedPosition);
        playlistSelectedID = selected.getId();
+       Intent intent = new Intent(this, NavigationScreen.class);
+       intent.putExtra(EXTRA_ID, playlistSelectedID);
+       startActivity(intent);
     }
 }

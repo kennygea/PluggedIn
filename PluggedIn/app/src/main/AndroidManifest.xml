@@ -46,7 +46,7 @@
             android:value="AIzaSyAqed5ryxqnRG7jbYf_OuAP14vTwhxLtuY" />
 
         <activity
-            android:name=".NavigatonScreen"
+            android:name=".NavigationScreen"
             android:label="@string/title_activity_navigaton_screen" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

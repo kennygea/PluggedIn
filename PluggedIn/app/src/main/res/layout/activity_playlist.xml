@@ -20,8 +20,14 @@
         android:layout_width="wrap_content"
         android:layout_height="200dp"
         android:layout_gravity="bottom"
-        android:layout_weight="0.91">
+        android:layout_weight="0.84">
     </ListView>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test"
+        android:id="@+id/maptest" />
 
 
 </LinearLayout>
