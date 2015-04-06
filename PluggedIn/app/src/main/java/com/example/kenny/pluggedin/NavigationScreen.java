@@ -108,9 +108,9 @@ public class NavigationScreen extends FragmentActivity
             zoomLens = 8.0f;
             mit = new LatLng(mitLat, mitLong);
         } catch(NullPointerException npe){
-            mitLat = 30.0;
-            mitLong = 30.0;
-            zoomLens = 10.0f;
+            mitLat = 42.355388;
+            mitLong = -71.099714;
+            zoomLens = 15.0f;
             mit = new LatLng(mitLat, mitLong);
         }
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mit, zoomLens));
