@@ -111,14 +111,15 @@ public class NavigationScreen extends FragmentActivity
                     });
                     thread.start();
                     Intent intent = new Intent(NavigationScreen.this, Confirmation.class);
+                    path.width(5.0f)
+                            .color(Color.RED);
+                    intent.putExtra("PATH", path);
                     NavigationScreen.this.startActivity(intent);
                     try{
                         thread.join();
                         synchronized (thread) {
                             //thread.join((long) 30000);
                             decodePolylines(full_polyline);
-                            path.width(5.0f)
-                                    .color(Color.RED);
                             mMap.addPolyline(path);
                         }
                     }catch(InterruptedException ie){

@@ -13,10 +13,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.PolylineOptions;
+
 
 public class Confirmation extends ActionBarActivity {
     String playlist_id;
     String destination;
+    PolylineOptions path = new PolylineOptions();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +31,7 @@ public class Confirmation extends ActionBarActivity {
         if (bundle != null) {
             playlist_id = bundle.getString(NavigationScreen.PLAYLIST_NAME);
             destination = bundle.getString(NavigationScreen.DESTINATION);
+            path = (PolylineOptions) bundle.get("PATH");
         }
         TextView playlist = (TextView) findViewById(R.id.playlist);
         playlist.setText(playlist_id);
@@ -36,7 +41,9 @@ public class Confirmation extends ActionBarActivity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent switchIntent = new Intent(Confirmation.this, DestinationMap.class);
+                switchIntent.putExtra("PATH", path);
+                Confirmation.this.startActivity(switchIntent);
             }
         });
     }
