@@ -1,8 +1,10 @@
 package com.example.kenny.pluggedin;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.location.Location;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -80,8 +82,12 @@ public class NavigationScreen extends FragmentActivity
                     String searched = searchedChars.toString();
                     searched = space_replacer(searched);
                     //Create a request to directions API
+                    LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+                    Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    double longitude = location.getLongitude();
+                    double latitude = location.getLatitude();
                     String origin = "Cambridge,%20MA";
-                    final String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + origin + "&destination=" + searched;
+                    final String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + latitude +"," + longitude + "&destination=" + searched;
                     handled = true;
                     Thread thread = new Thread(new Runnable() {
                         public synchronized void run() {
