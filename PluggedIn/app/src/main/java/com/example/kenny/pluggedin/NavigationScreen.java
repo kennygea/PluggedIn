@@ -49,6 +49,7 @@ public class NavigationScreen extends FragmentActivity
     private Location mLastLocation;
     private long playlistID;
     private PolylineOptions path = new PolylineOptions();
+    private String full_polyline = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,34 +79,43 @@ public class NavigationScreen extends FragmentActivity
                     final String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + origin + "&destination=" + searched + "&key=AIzaSyAqed5ryxqnRG7jbYf_OuAP14vTwhxLtuY";
                     handled = true;
                     Thread thread = new Thread(new Runnable() {
-                        public void run() {
-                            String readJSON = getJSON(url);
-                            try{
-                                JSONObject jsonObject = new JSONObject(readJSON);
-                                JSONArray routes = jsonObject.getJSONArray("routes");
-                                JSONObject first = routes.getJSONObject(0);
-                                JSONArray legs = first.getJSONArray("legs");
-                                String full_polyline = "";
-                                for (int i = 0; i < legs.length(); i++) {
-                                    JSONArray steps = legs.getJSONArray(i);
-                                    for (int n = 0; n < steps.length(); n++) {
-                                        JSONObject step = steps.getJSONObject(n);
-                                        JSONObject polyline = step.getJSONObject("polyline");
-                                        full_polyline += polyline.getString("points");
+                        public synchronized void run() {
+                                String readJSON = getJSON(url);
+                                try {
+                                    JSONObject jsonObject = new JSONObject(readJSON);
+                                    JSONArray routes = jsonObject.getJSONArray("routes");
+                                    JSONObject first = routes.getJSONObject(0);
+                                    JSONArray legs = first.getJSONArray("legs");
+                                    for (int i = 0; i < legs.length(); i++) {
+                                        JSONArray steps = legs.getJSONArray(i);
+                                        for (int n = 0; n < steps.length(); n++) {
+                                            JSONObject step = steps.getJSONObject(n);
+                                            JSONObject polyline = step.getJSONObject("polyline");
+                                            full_polyline += polyline.getString("points");
+                                        }
                                     }
-                                }
-                                decodePolylines(full_polyline);
-                                path.width(5.0f)
-                                        .color(Color.RED);
-                                mMap.addPolyline(path);
 
-                            } catch(Exception e){e.printStackTrace();}
-                            finally{System.out.println("Success");}
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                } finally {
+                                    System.out.println("Success");
+                                }
                         }
 
                     });
                     thread.start();
-
+                    try{
+                        thread.join();
+                        synchronized (thread) {
+                            //thread.join((long) 30000);
+                            decodePolylines(full_polyline);
+                            path.width(5.0f)
+                                    .color(Color.RED);
+                            mMap.addPolyline(path);
+                        }
+                    }catch(InterruptedException ie){
+                        System.out.println(ie.getMessage());
+                    }
 
                 }
                 return handled;
