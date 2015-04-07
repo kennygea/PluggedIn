@@ -1,5 +1,6 @@
 package com.example.kenny.pluggedin;
 
+import android.graphics.Color;
 import android.location.Location;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
@@ -33,7 +34,7 @@ public class NavigationScreen extends FragmentActivity
     private GoogleApiClient ApiClient;
     private Location mLastLocation;
     private long playlistID;
-    private PolylineOptions path;
+    private PolylineOptions path = new PolylineOptions();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,11 @@ public class NavigationScreen extends FragmentActivity
                     CharSequence searchedChars = v.getText();
                     String searched = searchedChars.toString();
                     //Create a request to directions API
+
+                    decodePolylines("a~l~Fjk~uOnzh@vlbBtc~@tsE`vnApw{A`dw@~w\\|tNtqf@l{Yd_Fblh@rxo@b}@xxSfytAblk@xxaBeJxlcBb~t@zbh@jc|Bx}C`rv@rw|@rlhA~dVzeo@vrSnc}Axf]fjz@xfFbw~@dz{A~d{A|zOxbrBbdUvpo@`cFp~xBc`Hk@nurDznmFfwMbwz@bbl@lq~@loPpxq@bw_@v|{CbtY~jGqeMb{iF|n\\~mbDzeVh_Wr|Efc\\x`Ij{kE}mAb~uF{cNd}xBjp]fulBiwJpgg@|kHntyArpb@bijCk_Kv~eGyqTj_|@`uV`k|DcsNdwxAott@r}q@_gc@nu`CnvHx`k@dse@j|p@zpiAp|gEicy@`omFvaErfo@igQxnlApqGze~AsyRzrjAb__@ftyB}pIlo_BflmA~yQftNboWzoAlzp@mz`@|}_@fda@jakEitAn{fB_a]lexClshBtmqAdmY_hLxiZd~XtaBndgC");
+                    path.width(5.0f)
+                            .color(Color.RED);
+                    mMap.addPolyline(path);
                     handled = true;
                 }
                 return handled;
