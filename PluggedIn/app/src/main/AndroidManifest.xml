@@ -52,6 +52,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.kenny.pluggedin.MainActivity" />
         </activity>
+        <activity
+            android:name=".Confirmation"
+            android:label="@string/title_activity_confirmation" >
+        </activity>
     </application>
 
 </manifest>

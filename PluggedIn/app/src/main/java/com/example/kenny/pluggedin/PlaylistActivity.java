@@ -24,6 +24,7 @@ public class PlaylistActivity extends ActionBarActivity {
     private ListView playlistView;
     private long playlistSelectedID;
     public final static String EXTRA_ID = "com.example.kenny.pluggedin.Playlist ID";
+    public final static String PLAYLIST_NAME = "com.example.kenny.pluggedin.Playlist Name";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +102,7 @@ public class PlaylistActivity extends ActionBarActivity {
        playlistSelectedID = selected.getId();
        Intent intent = new Intent(this, NavigationScreen.class);
        intent.putExtra(EXTRA_ID, playlistSelectedID);
+       intent.putExtra(PLAYLIST_NAME, selected.getTitle());
        startActivity(intent);
     }
 }

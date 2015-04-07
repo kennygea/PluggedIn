@@ -50,16 +50,20 @@ public class NavigationScreen extends FragmentActivity
     private long playlistID;
     private PolylineOptions path = new PolylineOptions();
     private String full_polyline = "";
+    private String playlistName;
+    public final static String DESTINATION = "com.example.kenny.pluggedin.DESTINATION";
+    public final static String PLAYLIST_NAME = "com.example.kenny.pluggedin.Playlist Name1";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_navigaton_screen);
-        //setUpMapIfNeeded();
-       Intent intent = getIntent();
-       Bundle bundle = intent.getExtras();
-       if (bundle != null) {
-           playlistID = bundle.getLong(PlaylistActivity.EXTRA_ID);
+           @Override
+           protected void onCreate(Bundle savedInstanceState) {
+               super.onCreate(savedInstanceState);
+               setContentView(R.layout.activity_navigaton_screen);
+               //setUpMapIfNeeded();
+               Intent intent = getIntent();
+               Bundle bundle = intent.getExtras();
+               if (bundle != null) {
+                   playlistID = bundle.getLong(PlaylistActivity.EXTRA_ID);
+                   playlistName = bundle.getString(PlaylistActivity.PLAYLIST_NAME);
        }
 
         MapFragment navigationFrag = (MapFragment) getFragmentManager()
