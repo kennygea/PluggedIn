@@ -78,9 +78,10 @@ public class NavigationScreen extends FragmentActivity
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     CharSequence searchedChars = v.getText();
                     String searched = searchedChars.toString();
+                    searched = space_replacer(searched);
                     //Create a request to directions API
-                    String origin = "MIT";
-                    final String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + origin + "&destination=" + searched + "&key=AIzaSyAqed5ryxqnRG7jbYf_OuAP14vTwhxLtuY";
+                    String origin = "Cambridge,%20MA";
+                    final String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + origin + "&destination=" + searched;
                     handled = true;
                     Thread thread = new Thread(new Runnable() {
                         public synchronized void run() {
@@ -89,15 +90,10 @@ public class NavigationScreen extends FragmentActivity
                                     JSONObject jsonObject = new JSONObject(readJSON);
                                     JSONArray routes = jsonObject.getJSONArray("routes");
                                     JSONObject first = routes.getJSONObject(0);
-                                    JSONArray legs = first.getJSONArray("legs");
-                                    for (int i = 0; i < legs.length(); i++) {
-                                        JSONArray steps = legs.getJSONArray(i);
-                                        for (int n = 0; n < steps.length(); n++) {
-                                            JSONObject step = steps.getJSONObject(n);
-                                            JSONObject polyline = step.getJSONObject("polyline");
-                                            full_polyline += polyline.getString("points");
-                                        }
-                                    }
+                                    JSONObject poly = first.getJSONObject("overview_polyline");
+                                    full_polyline = poly.getString("points");
+                                    System.out.println(first);
+
 
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -285,5 +281,10 @@ public class NavigationScreen extends FragmentActivity
             e.printStackTrace();
         }
         return builder.toString();
+    }
+
+    public String space_replacer(String string) {
+        string = string.replaceAll(" ", "%20");
+        return string;
     }
 }
