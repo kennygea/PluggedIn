@@ -6,6 +6,10 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -17,6 +21,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.sql.Connection;
 
@@ -27,6 +33,7 @@ public class NavigationScreen extends FragmentActivity
     private GoogleApiClient ApiClient;
     private Location mLastLocation;
     private long playlistID;
+    private PolylineOptions path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +49,21 @@ public class NavigationScreen extends FragmentActivity
         MapFragment navigationFrag = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.DisplayMap);
         navigationFrag.getMapAsync(this);
+
+        EditText destination = (EditText) findViewById(R.id.editText);
+        destination.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    CharSequence searchedChars = v.getText();
+                    String searched = searchedChars.toString();
+                    //Create a request to directions API
+                    handled = true;
+                }
+                return handled;
+            }
+        });
 
     }
 
@@ -143,5 +165,38 @@ public class NavigationScreen extends FragmentActivity
     @Override
     public void onConnectionFailed(ConnectionResult result) {
         System.out.println(result.toString());
+    }
+
+    private void decodePolylines(final String encodedPoints) {
+        int index = 0;
+        int lat = 0, lng = 0;
+
+        while (index < encodedPoints.length()) {
+            int b, shift = 0, result = 0;
+            do {
+                b = encodedPoints.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift; shift += 5;
+            }
+
+            while (b >= 0x20);
+            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lat += dlat;
+            shift = 0;
+            result = 0;
+
+            do {
+                b = encodedPoints.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            }
+
+            while (b >= 0x20);
+            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lng += dlng;
+            this.path.add(new LatLng((double)lat/1E5, (double)lng/1E5));
+
+            //This algorithm for polyline decoding from
+            //http://mrbool.com/google-directions-api-tracing-routes-in-android/32001#ixzz3WaI2DNMD
+        }
     }
 }

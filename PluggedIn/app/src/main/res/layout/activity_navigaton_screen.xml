@@ -11,13 +11,29 @@
         android:id="@+id/parent_lay"
         android:orientation="vertical"
         android:layout_height="match_parent" >
-        <fragment
+
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:id="@+id/editText"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/background_floating_material_light"
+            android:autoText="false"
+            android:clickable="false"
+            android:text="Destination"
+            android:layout_weight="0.05"
+            android:inputType="text"
+            android:imeOptions="actionSearch"/>
+
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:name="com.google.android.gms.maps.MapFragment"
             android:id="@+id/DisplayMap"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:layout_weight="1"/>
+
     </LinearLayout>
 </RelativeLayout>
