@@ -110,6 +110,8 @@ public class NavigationScreen extends FragmentActivity
 
                     });
                     thread.start();
+                    Intent intent = new Intent(NavigationScreen.this, Confirmation.class);
+                    NavigationScreen.this.startActivity(intent);
                     try{
                         thread.join();
                         synchronized (thread) {

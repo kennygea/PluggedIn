@@ -39,13 +39,13 @@ public class PlaylistActivity extends ActionBarActivity {
         });
         PlaylistAdapter playlistAdt = new PlaylistAdapter(this, playlistList);
         playlistView.setAdapter(playlistAdt);
-        Button button = (Button)findViewById(R.id.maptest);
-        button.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(PlaylistActivity.this, NavigationScreen.class);
-                PlaylistActivity.this.startActivity(intent);
-            }
-        });
+       // Button button = (Button)findViewById(R.id.maptest);
+//        button.setOnClickListener(new Button.OnClickListener() {
+//            public void onClick(View v) {
+//                Intent intent = new Intent(PlaylistActivity.this, NavigationScreen.class);
+//                PlaylistActivity.this.startActivity(intent);
+//            }
+//        });
 
     }
 
