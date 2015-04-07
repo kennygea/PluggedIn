@@ -48,18 +48,12 @@ public class MusicPlayer extends Fragment {
         resumeButt = (Button)view.findViewById(R.id.resumeButt);
         pauseButt.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                if (player.isPlaying()) {
                     player.pause();
-                }
             }
         });
         resumeButt.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                if (!player.isPlaying()) {
-                    int length = player.getCurrentPosition();
-                    player.seekTo(length);
-                    player.start();
-                }
+                player.start();
             }
         });
 
@@ -67,6 +61,7 @@ public class MusicPlayer extends Fragment {
     }
     public void playAudio(final String path) {
         player = new MediaPlayer();
+        player.setLooping(true);
         if (path == null) {
             Log.e(LOGGING_TAG, "Called playAudio with null data stream.");
             return;

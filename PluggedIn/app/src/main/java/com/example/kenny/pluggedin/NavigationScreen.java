@@ -25,6 +25,20 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 
 public class NavigationScreen extends FragmentActivity
@@ -59,13 +73,35 @@ public class NavigationScreen extends FragmentActivity
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     CharSequence searchedChars = v.getText();
                     String searched = searchedChars.toString();
-                    //Create a request to directions API
 
-                    decodePolylines("a~l~Fjk~uOnzh@vlbBtc~@tsE`vnApw{A`dw@~w\\|tNtqf@l{Yd_Fblh@rxo@b}@xxSfytAblk@xxaBeJxlcBb~t@zbh@jc|Bx}C`rv@rw|@rlhA~dVzeo@vrSnc}Axf]fjz@xfFbw~@dz{A~d{A|zOxbrBbdUvpo@`cFp~xBc`Hk@nurDznmFfwMbwz@bbl@lq~@loPpxq@bw_@v|{CbtY~jGqeMb{iF|n\\~mbDzeVh_Wr|Efc\\x`Ij{kE}mAb~uF{cNd}xBjp]fulBiwJpgg@|kHntyArpb@bijCk_Kv~eGyqTj_|@`uV`k|DcsNdwxAott@r}q@_gc@nu`CnvHx`k@dse@j|p@zpiAp|gEicy@`omFvaErfo@igQxnlApqGze~AsyRzrjAb__@ftyB}pIlo_BflmA~yQftNboWzoAlzp@mz`@|}_@fda@jakEitAn{fB_a]lexClshBtmqAdmY_hLxiZd~XtaBndgC");
-                    path.width(5.0f)
-                            .color(Color.RED);
-                    mMap.addPolyline(path);
+                    //Create a request to directions API
+                    String origin = "MIT";
+                    String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + origin + "&destination=" + searched + "&key=AIzaSyAqed5ryxqnRG7jbYf_OuAP14vTwhxLtuY";
+
                     handled = true;
+                    String readJSON = getJSON(url);
+                    try{
+                        JSONObject jsonObject = new JSONObject(readJSON);
+                        JSONArray routes = jsonObject.getJSONArray("routes");
+                        JSONObject first = routes.getJSONObject(0);
+                        JSONArray legs = first.getJSONArray("legs");
+                        String full_polyline = "";
+                        for (int i = 0; i < legs.length(); i++) {
+                            JSONArray steps = legs.getJSONArray(i);
+                            for (int n = 0; n < steps.length(); n++) {
+                                JSONObject step = steps.getJSONObject(n);
+                                JSONObject polyline = step.getJSONObject("polyline");
+                                full_polyline += polyline.getString("points");
+                            }
+                        }
+                        decodePolylines(full_polyline);
+                        path.width(5.0f)
+                                .color(Color.RED);
+                        mMap.addPolyline(path);
+
+                    } catch(Exception e){e.printStackTrace();}
+                    finally{System.out.println("Success");}
+
                 }
                 return handled;
             }
@@ -204,5 +240,31 @@ public class NavigationScreen extends FragmentActivity
             //This algorithm for polyline decoding from
             //http://mrbool.com/google-directions-api-tracing-routes-in-android/32001#ixzz3WaI2DNMD
         }
+    }
+    public String getJSON(String address){
+        StringBuilder builder = new StringBuilder();
+        HttpClient client = new DefaultHttpClient();
+        HttpGet httpGet = new HttpGet(address);
+        try{
+            HttpResponse response = client.execute(httpGet);
+            StatusLine statusLine = response.getStatusLine();
+            int statusCode = statusLine.getStatusCode();
+            if(statusCode == 200){
+                HttpEntity entity = response.getEntity();
+                InputStream content = entity.getContent();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+                String line;
+                while((line = reader.readLine()) != null){
+                    builder.append(line);
+                }
+            } else {
+                Log.e(MainActivity.class.toString(),"Failedet JSON object");
+            }
+        }catch(ClientProtocolException e){
+            e.printStackTrace();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        return builder.toString();
     }
 }
