@@ -58,7 +58,7 @@ public class DestinationMap extends ActionBarActivity
             // Intent, pass the Intent's extras to the fragment as arguments
             firstFragment.setArguments(getIntent().getExtras());
 
-            // Add the fragment to the 'fragment_container' FrameLayout
+//            // Add the fragment to the 'fragment_container' FrameLayout
 //            getSupportFragmentManager().beginTransaction()
 //                    .add(R.id.parent_lay, firstFragment).commit();
         }

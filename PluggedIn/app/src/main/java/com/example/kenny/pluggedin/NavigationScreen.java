@@ -80,6 +80,7 @@ public class NavigationScreen extends FragmentActivity
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     CharSequence searchedChars = v.getText();
                     String searched = searchedChars.toString();
+                    String destinationText = searched;
                     searched = space_replacer(searched);
                     //Create a request to directions API
                     LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
@@ -114,6 +115,9 @@ public class NavigationScreen extends FragmentActivity
                     path.width(5.0f)
                             .color(Color.RED);
                     intent.putExtra("PATH", path);
+                    intent.putExtra("PlaylistID", playlistID);
+                    intent.putExtra("PlaylistName", playlistName);
+                    intent.putExtra("Destination", destinationText);
                     NavigationScreen.this.startActivity(intent);
                     try{
                         thread.join();

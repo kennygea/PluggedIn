@@ -18,9 +18,12 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 
 public class Confirmation extends ActionBarActivity {
-    String playlist_id;
+    String playlist_name;
+    Long playlist_id;
     String destination;
     PolylineOptions path = new PolylineOptions();
+    public final static String PLAYLIST_ID = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,12 +32,13 @@ public class Confirmation extends ActionBarActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
-            playlist_id = bundle.getString(NavigationScreen.PLAYLIST_NAME);
-            destination = bundle.getString(NavigationScreen.DESTINATION);
+            playlist_name = (String) bundle.get("PlaylistName");
+            playlist_id = (Long) bundle.get("PlaylistID");
+            destination = (String) bundle.get("Destination");
             path = (PolylineOptions) bundle.get("PATH");
         }
         TextView playlist = (TextView) findViewById(R.id.playlist);
-        playlist.setText(playlist_id);
+        playlist.setText(playlist_name);
         TextView dest = (TextView) findViewById(R.id.destination);
         dest.setText(destination);
         Button confirm = (Button) findViewById(R.id.confirm);
@@ -43,6 +47,8 @@ public class Confirmation extends ActionBarActivity {
             public void onClick(View v) {
                 Intent switchIntent = new Intent(Confirmation.this, DestinationMap.class);
                 switchIntent.putExtra("PATH", path);
+                switchIntent.putExtra("Name", playlist_name);
+                switchIntent.putExtra("ID", playlist_id);
                 Confirmation.this.startActivity(switchIntent);
             }
         });
