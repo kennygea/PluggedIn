@@ -21,7 +21,7 @@ public class Confirmation extends ActionBarActivity {
     String playlist_name;
     Long playlist_id;
     String destination;
-    PolylineOptions path = new PolylineOptions();
+    String path;
     public final static String PLAYLIST_ID = "";
 
 
@@ -35,8 +35,12 @@ public class Confirmation extends ActionBarActivity {
             playlist_name = (String) bundle.get("PlaylistName");
             playlist_id = (Long) bundle.get("PlaylistID");
             destination = (String) bundle.get("Destination");
-            path = (PolylineOptions) bundle.get("PATH");
+            path = (String) bundle.get("PATH");
         }
+        System.out.println(path);
+        System.out.println(destination);
+        System.out.println(playlist_name);
+        System.out.println(playlist_id);
         TextView playlist = (TextView) findViewById(R.id.playlist);
         playlist.setText(playlist_name);
         TextView dest = (TextView) findViewById(R.id.destination);

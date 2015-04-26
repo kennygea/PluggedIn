@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -73,11 +74,21 @@ public class NavigationScreen extends FragmentActivity
         navigationFrag.getMapAsync(this);
 
         EditText destination = (EditText) findViewById(R.id.editText);
+               destination.setSelectAllOnFocus(true);
+        destination.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.clearFocus();
+                v.requestFocus();
+            }
+        });
+
         destination.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+
                     CharSequence searchedChars = v.getText();
                     String searched = searchedChars.toString();
                     String destinationText = searched;
@@ -85,6 +96,7 @@ public class NavigationScreen extends FragmentActivity
                     //Create a request to directions API
                     LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
                     Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                     double longitude = location.getLongitude();
                     double latitude = location.getLatitude();
                     String origin = "Cambridge,%20MA";
@@ -99,7 +111,6 @@ public class NavigationScreen extends FragmentActivity
                                     JSONObject first = routes.getJSONObject(0);
                                     JSONObject poly = first.getJSONObject("overview_polyline");
                                     full_polyline = poly.getString("points");
-                                    System.out.println(first);
 
 
                                 } catch (Exception e) {
@@ -111,20 +122,20 @@ public class NavigationScreen extends FragmentActivity
 
                     });
                     thread.start();
-                    Intent intent = new Intent(NavigationScreen.this, Confirmation.class);
-                    path.width(5.0f)
-                            .color(Color.RED);
-                    intent.putExtra("PATH", path);
-                    intent.putExtra("PlaylistID", playlistID);
-                    intent.putExtra("PlaylistName", playlistName);
-                    intent.putExtra("Destination", destinationText);
-                    NavigationScreen.this.startActivity(intent);
                     try{
                         thread.join();
                         synchronized (thread) {
                             //thread.join((long) 30000);
                             decodePolylines(full_polyline);
                             mMap.addPolyline(path);
+                            Intent intent = new Intent(NavigationScreen.this, Confirmation.class);
+                            path.width(5.0f)
+                                    .color(Color.RED);
+                            intent.putExtra("PATH", full_polyline);
+                            intent.putExtra("PlaylistID", playlistID);
+                            intent.putExtra("PlaylistName", playlistName);
+                            intent.putExtra("Destination", destinationText);
+                            NavigationScreen.this.startActivity(intent);
                         }
                     }catch(InterruptedException ie){
                         System.out.println(ie.getMessage());

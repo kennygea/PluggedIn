@@ -23,9 +23,10 @@ import android.widget.TextView;
 public class MusicPlayer extends Fragment {
 
     private long playlistID;
-    private Button playButt, stopButt, pauseButt, resumeButt;
+    private Button stopButt, pauseButt, resumeButt;
     private ProgressBar progressBar;
-    private TextView minutesDoneTV;
+    private String playlistName;
+    private TextView message;
     private static final String LOGGING_TAG = "PluggedIn";
     private MediaPlayer player;
 
@@ -36,15 +37,20 @@ public class MusicPlayer extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        playlistID = getArguments().getLong("ID");
+        playlistID = getActivity().getIntent().getExtras().getLong("ID");
+        playlistName = getActivity().getIntent().getExtras().getString("Name");
         playTrackFromPlaylist(playlistID);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+        playlistID = getActivity().getIntent().getExtras().getLong("ID");
+        playlistName = getActivity().getIntent().getExtras().getString("Name");
+        playTrackFromPlaylist(playlistID);
         View view = inflater.inflate(R.layout.fragment_music_player, null);
         pauseButt = (Button)view.findViewById(R.id.pauseButt);
+        stopButt = (Button) view.findViewById(R.id.end);
         resumeButt = (Button)view.findViewById(R.id.resumeButt);
         pauseButt.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
@@ -56,9 +62,21 @@ public class MusicPlayer extends Fragment {
                 player.start();
             }
         });
+        stopButt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                player.stop();
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
+        message = (TextView) view.findViewById(R.id.song);
+        message.setText("Playlist: " + playlistName);
 
         return view;
     }
+
     public void playAudio(final String path) {
         player = new MediaPlayer();
         player.setLooping(true);
